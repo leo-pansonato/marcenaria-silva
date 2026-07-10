@@ -1,30 +1,34 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import type { StaticImageData } from 'next/image';
 
-import type {StaticImageData} from 'next/image';
+export type ProjectCategory = 'cozinhas' | 'residencial' | 'comercial';
+
+export interface ProjectImage {
+  src: StaticImageData;
+  alt: string;
+}
 
 export interface Project {
   id: string;
   title: string;
-  description: string;
-  category: 'cozinhas' | 'salas' | 'dormitorios' | 'office';
+  category: ProjectCategory;
   categoryLabel: string;
-  // `null` = slot sem foto correspondente (aguardando novas imagens do cliente).
-  image: StaticImageData | null;
-  specs: {
-    materials: string[];
-    finishes: string[];
-    location: string;
-  };
+  description: string;
+  /** A primeira imagem é a capa; as demais entram no crossfade automático. */
+  images: ProjectImage[];
+  materials: string[];
+  /** Mensagem pré-preenchida do CTA de WhatsApp deste projeto. */
+  whatsappMessage: string;
 }
 
-export interface MaterialInfo {
+export interface Service {
   id: string;
-  name: string;
+  number: string;
+  title: string;
   description: string;
-  texture: string;
+  /** Nome do ícone Lucide, resolvido na seção de serviços. */
+  icon: string;
+  /** Card em destaque ocupa célula maior no grid assimétrico. */
+  featured?: boolean;
 }
 
 export interface ProcessStep {
@@ -33,15 +37,14 @@ export interface ProcessStep {
   description: string;
 }
 
-export interface PortfolioVideo {
-  id: string;
-  /** URL pública do .mp4 (a partir de /public). */
-  src: string;
-  /** URL pública do pôster (primeiro quadro) exibido antes do play. */
-  poster: string;
-  title: string;
-  categoryLabel: string;
-  description: string;
-  /** Duração formatada (ex.: "0:38"), apenas exibição. */
-  duration: string;
+export interface Testimonial {
+  quote: string;
+  author: string;
+  project: string;
+}
+
+export interface Stat {
+  value: number;
+  suffix?: string;
+  label: string;
 }

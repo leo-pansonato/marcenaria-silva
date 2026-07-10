@@ -1,12 +1,11 @@
 /**
- * @license
- * SPDX-License-Identifier: Apache-2.0
+ * Configuração central do site — contato, navegação e URLs.
+ * Tudo que é "dado da empresa" vive aqui, em um único lugar.
  */
 
-// Prefixo de caminho quando publicado sob um subdiretório (ex.: GitHub Pages
-// em /marcenaria-renovo). O Next prefixa automaticamente imports estáticos,
-// <Image> e <Link>, mas NÃO strings soltas em /public (vídeos, posters). Este
-// helper cuida disso. Vazio no dev/local => caminhos na raiz continuam válidos.
+// Prefixo de caminho quando publicado sob subdiretório (GitHub Pages de
+// projeto). O Next prefixa imports estáticos e <Link> automaticamente, mas NÃO
+// strings soltas de /public (vídeos, OG image). Este helper cobre esses casos.
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
 /** Prefixa um caminho de /public com o basePath de publicação, quando houver. */
@@ -15,30 +14,47 @@ export function asset(path: string): string {
   return `${BASE_PATH}${clean}`;
 }
 
-// Contato de conversão (mesmo número usado em toda a landing).
-export const WHATSAPP_PHONE = '5511998765432';
+/**
+ * EDITAR AQUI ➜ número oficial do WhatsApp da Marcenaria Silva.
+ * Formato internacional, apenas dígitos: 55 + DDD + número.
+ * Enquanto for placeholder, os links abrem o WhatsApp sem destinatário válido.
+ */
+export const WHATSAPP_NUMBER = '55XXXXXXXXXXX';
 
-/** Monta o link do WhatsApp com uma mensagem opcional já codificada. */
-export function buildWhatsAppLink(customMsg?: string): string {
-  const defaultText =
-    'Olá! Gostaria de solicitar um orçamento e bater um papo sobre meu projeto de móveis sob medida de alto padrão.';
-  const text = encodeURIComponent(customMsg || defaultText);
-  return `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
+export const DEFAULT_WHATSAPP_MESSAGE =
+  'Olá! Quero um orçamento de móveis planejados com a Marcenaria Silva.';
+
+/** Monta o link wa.me com mensagem pré-preenchida (URL-encoded). */
+export function buildWhatsAppLink(message: string = DEFAULT_WHATSAPP_MESSAGE): string {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
+
+/** EDITAR AQUI ➜ URL pública do site (metadata, Open Graph, JSON-LD, sitemap). */
+export const SITE_URL = 'https://leo-pansonato.github.io/marcenaria-silva';
+
+export const BRAND = {
+  name: 'Marcenaria Silva',
+  tagline: 'Móveis Planejados',
+  description:
+    'Marcenaria de alto padrão: móveis planejados sob medida com desenho autoral, materiais nobres e instalação impecável, para ambientes residenciais e comerciais.',
+  // EDITAR AQUI ➜ dados reais de contato e atuação.
+  phoneDisplay: '+55 (XX) XXXXX-XXXX',
+  instagramHandle: '@marcenariasilva',
+  instagramUrl: 'https://instagram.com/marcenariasilva',
+  serviceArea: 'Projetos residenciais e comerciais em todo o estado de São Paulo',
+  hours: 'Segunda a sexta, 8h às 18h · Sábado, 9h às 13h',
+} as const;
 
 export interface NavItem {
   label: string;
-  /** Sempre absoluto a partir da home para funcionar de qualquer página. */
   href: string;
 }
 
-// Navegação compartilhada entre a home e a página de portfólio.
 export const navItems: NavItem[] = [
-  { label: 'Início', href: '/#início' },
-  { label: 'Projetos', href: '/#projetos' },
-  { label: 'Portfólio', href: '/portfolio' },
-  { label: 'Qualidade', href: '/#qualidade' },
-  { label: 'Processo', href: '/#processo' },
-  { label: 'Sobre', href: '/#sobre' },
-  { label: 'Contato', href: '/#contato' },
+  { label: 'Manifesto', href: '#manifesto' },
+  { label: 'Projetos', href: '#projetos' },
+  { label: 'Serviços', href: '#servicos' },
+  { label: 'Processo', href: '#processo' },
+  { label: 'Depoimentos', href: '#depoimentos' },
+  { label: 'Contato', href: '#contato' },
 ];

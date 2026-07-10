@@ -1,297 +1,244 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Design tokens — Marcenaria Silva (derivados da logo: madeira nobre + luz quente)
+   ========================================================================== */
 @theme {
-  /* Fonte única da landing (Hanken Grotesk) carregada via next/font; ver src/app/layout.tsx.
-     Todas as famílias apontam para a mesma grotesca para uniformizar o site inteiro. */
-  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
-  --font-grotesk: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  /* Tipografia: serifada display (Fraunces) + sans geométrica (Manrope) */
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 
-  --color-amber-gold: #D4AF37;
-  --color-noble-brown: #3E2723;
-  --color-noble-brown-light: #5D4037;
-  --color-noble-brown-dark: #1B0F0D;
-  --color-luxury-gold: #C5A880;
-  --color-luxury-gold-light: #E5D5C0;
-  --color-luxury-gold-dark: #9F825B;
+  /* Paleta madeira */
+  --color-espresso: #2C1B10; /* fundo escuro principal */
+  --color-espresso-deep: #1E1109; /* footer / vinhetas */
+  --color-brown: #3E2A1A; /* superfícies elevadas */
+  --color-caramel: #B8874E; /* destaque primário */
+  --color-gold: #C89B6A; /* highlight / hover */
+  --color-tan: #A67B4F; /* tons intermediários */
+  --color-cream: #F5EFE6; /* texto claro / seções claras */
+  --color-white: #FFFFFF;
 
-  --animate-float-slow: float-slow 12s ease-in-out infinite;
-  --animate-float-slower: float-slower 16s ease-in-out infinite;
-  --animate-shine: shine 4s ease-in-out infinite;
-  --animate-pulse-subtle: pulse-subtle 3s ease-in-out infinite;
-}
-
-@keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0px) scale(1) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-20px) scale(1.05) rotate(2deg);
-  }
+  /* Animações utilitárias */
+  --animate-marquee: marquee 48s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 56s linear infinite;
+  --animate-fab-pulse: fab-pulse 2.6s ease-in-out infinite;
+  --animate-scroll-line: scroll-line 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  --animate-swipe-nudge: swipe-nudge 1.5s ease-in-out infinite;
+  --animate-play-ring: play-ring 2.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
-@keyframes float-slower {
-  0%, 100% {
-    transform: translateY(0px) scale(1) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-30px) scale(0.95) rotate(-2deg);
-  }
+/* Seta que "cutuca" para o lado — dica de que o carrossel é arrastável (mobile) */
+@keyframes swipe-nudge {
+  0%, 100% { transform: translateX(-2px); opacity: 0.7; }
+  50% { transform: translateX(4px); opacity: 1; }
 }
 
-@keyframes shine {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 200%;
-  }
+/* Anel que pulsa atrás do botão de play, chamando o toque */
+@keyframes play-ring {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  70%, 100% { transform: scale(1.55); opacity: 0; }
 }
 
-@keyframes pulse-subtle {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-  }
-  50% {
-    transform: scale(1.03);
-    box-shadow: 0 0 25px 12px rgba(16, 185, 129, 0.25);
-  }
+@keyframes scroll-line {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
 }
 
-/* Altura-base do hero em dvh (dynamic viewport height): acompanha a barra de
-   endereço no mobile e evita o "pulo" do 100vh. A linha vh é só fallback para
-   navegadores sem suporte a dvh — a declaração dvh vem depois e prevalece.
-   No mobile o hero ocupa a tela inteira (100dvh) para não deixar sobrar a
-   faixa clara referente à barra de navegação do navegador. */
-.min-h-hero {
-  min-height: 100vh;
-  min-height: 100dvh;
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
-/* Desktop (lg+): mantém a respiração original de ~90% da viewport. */
-@media (min-width: 1024px) {
-  .min-h-hero {
-    min-height: 90vh;
-    min-height: 90dvh;
-  }
+@keyframes marquee-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
 }
 
-/* Glassmorphism custom classes */
-.liquid-glass {
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(197, 168, 128, 0.4);
-  box-shadow: 0 16px 40px 0 rgba(62, 39, 35, 0.1);
+@keyframes fab-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 135, 78, 0.45); }
+  55% { box-shadow: 0 0 0 14px rgba(184, 135, 78, 0); }
 }
 
-.liquid-glass-dark {
-  background: rgba(30, 20, 18, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(197, 168, 128, 0.25);
-  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.2);
+/* ==========================================================================
+   Base
+   ========================================================================== */
+html {
+  background-color: var(--color-espresso);
+  scroll-behavior: initial; /* Lenis assume o scroll suave */
 }
 
-.liquid-glass-hover {
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.liquid-glass-hover:hover {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: rgba(197, 168, 128, 0.65);
-  box-shadow: 0 24px 48px 0 rgba(62, 39, 35, 0.12);
-  transform: translateY(-4px);
-}
-
-/* Shining Gold Metal Text Animation */
-@keyframes textShine {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.shine-gold-text {
-  background: linear-gradient(
-    to right,
-    #9F825B 0%,
-    #E5D5C0 25%,
-    #D4AF37 50%,
-    #E5D5C0 75%,
-    #9F825B 100%
-  );
-  background-size: 200% auto;
-  color: transparent;
-  background-clip: text;
-  -webkit-background-clip: text;
-  animation: textShine 4s linear infinite;
-  text-shadow: 0 0 1px rgba(159, 130, 91, 0.1);
-}
-
-/* Scroll styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #FAFAF9;
-}
-::-webkit-scrollbar-thumb {
-  background: #C5A880;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #9F825B;
-}
-
-/* Aplica a fonte da landing a toda a página, não só onde há a classe font-sans. */
 body {
   font-family: var(--font-sans);
+  background-color: var(--color-espresso);
+  color: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Evita scroll horizontal acidental em qualquer largura (mobile inclusive). */
-html,
-body {
+html, body {
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
-/* Remove o atraso de 300ms no toque e o zoom por duplo-toque em controles,
-   deixando a resposta instantânea no mobile. */
-a,
-button,
-input,
-textarea,
-select,
-[role="button"] {
+::selection {
+  background: var(--color-caramel);
+  color: var(--color-espresso);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+a, button, [role="button"] {
   touch-action: manipulation;
 }
 
-/* Foco visível e consistente para navegação por teclado (acessibilidade).
-   Só aparece para quem navega por teclado - mouse/toque não disparam. */
-:focus-visible {
-  outline: 2px solid var(--color-luxury-gold-dark);
-  outline-offset: 2px;
-  border-radius: 6px;
+/* Scrollbar discreta no tema madeira */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--color-espresso-deep); }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--color-caramel) 70%, transparent);
+  border-radius: 8px;
+  border: 2px solid var(--color-espresso-deep);
 }
+::-webkit-scrollbar-thumb:hover { background: var(--color-gold); }
 
 /* ==========================================================================
-   Scroll reveal - usado pelo hook useInViewAnimation
+   Utilitários da casa
    ========================================================================== */
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-  opacity: 0;
-}
-
-/* ==========================================================================
-   Cursor image trail - miniaturas que nascem sob o cursor
-   ========================================================================== */
-.cursor-trail-img {
-  position: absolute;
-  width: clamp(90px, 10vw, 150px);
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  border-radius: 14px;
+/* Grão fotográfico sutil sobre toda a página (textura de madeira/filme) */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
   pointer-events: none;
-  z-index: 30;
-  will-change: transform, opacity;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  opacity: 0.055;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Filete: linha fina em degradê caramelo, assinatura visual das seções */
+.filete {
+  height: 1px;
+  background: linear-gradient(90deg, var(--color-caramel), transparent 70%);
 }
 
 /* ==========================================================================
-   Marquee infinito de imagens
+   Liquid glass — superfícies translúcidas com brilho, profundidade e refração
+   .glass       → sobre fundos escuros (espresso)
+   .glass-light → sobre fundos claros (cream)
    ========================================================================== */
-@keyframes marqueeLeft {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+.glass {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-cream) 14%, transparent),
+      color-mix(in srgb, var(--color-cream) 4%, transparent) 60%
+    );
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid color-mix(in srgb, var(--color-cream) 16%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-white) 22%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--color-espresso-deep) 40%, transparent),
+    0 24px 60px -28px rgba(0, 0, 0, 0.65);
 }
 
-@keyframes marqueeRight {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
+.glass-light {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-white) 62%, transparent),
+      color-mix(in srgb, var(--color-white) 26%, transparent) 60%
+    );
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid color-mix(in srgb, var(--color-white) 55%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-white) 75%, transparent),
+    0 20px 48px -28px rgba(44, 27, 16, 0.42);
 }
 
-.marquee {
-  overflow: hidden;
+/* Brilho superior que "escorre" na borda do vidro (aplicar em wrapper relativo). */
+.glass-sheen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-white) 24%, transparent),
+    transparent 22%
+  );
+  opacity: 0.7;
 }
 
+/* Ritmo vertical compacto e responsivo — assinatura de espaçamento da casa. */
+.section-y {
+  padding-top: clamp(3.75rem, 6.5vw, 7rem);
+  padding-bottom: clamp(3.75rem, 6.5vw, 7rem);
+}
+.section-y-tight {
+  padding-top: clamp(2.5rem, 5vw, 5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 5rem);
+}
+
+/* Número de seção vazado (contorno) */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--color-caramel) 55%, transparent);
+}
+
+/* Máscara de fade nas bordas horizontais (marquees / trilhos) */
+.mask-fade-x {
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+/* Trilho horizontal mobile sem barra de rolagem */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Marquee infinito (o track duplica o conteúdo para o loop de -50%) */
 .marquee-track {
   display: flex;
   width: max-content;
   will-change: transform;
-  animation: marqueeLeft 45s linear infinite;
+  animation: var(--animate-marquee);
 }
+.marquee-track.reverse { animation: var(--animate-marquee-reverse); }
+.marquee:hover .marquee-track { animation-play-state: paused; }
 
-.marquee-track.reverse {
-  animation-name: marqueeRight;
-}
+/* ==========================================================================
+   Lenis (scroll suave)
+   ========================================================================== */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
 
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-html {
-  scroll-behavior: initial; /* Lenis handles smooth scrolling, initial is safer to avoid conflict */
-}
-
-/* Lenis configurations for premium fluid scrolling */
-html.lenis, html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* Acessibilidade + fluidez: respeita quem prefere menos movimento.
-   Desliga animações/transições CSS (shine, float, pulse, ping, spin, textShine)
-   e o scroll suave, reduzindo custo de GPU/CPU para esses usuários. */
+/* ==========================================================================
+   Acessibilidade: quem prefere menos movimento recebe a página estática.
+   (Animações GSAP são gated por matchMedia no JS; aqui cobrimos as de CSS.)
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
   }
 }

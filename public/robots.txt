@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# EDITAR: confirme a URL final do site (mesma de SITE_URL em src/lib/site.ts)
+Sitemap: https://leo-pansonato.github.io/marcenaria-silva/sitemap.xml

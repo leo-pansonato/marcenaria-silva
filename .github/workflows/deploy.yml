@@ -38,7 +38,8 @@ jobs:
         run: npm run build
         env:
           # Site publicado sob /<nome-do-repo> no GitHub Pages de projeto.
-          NEXT_PUBLIC_BASE_PATH: /marcenaria-renovo
+          # Dinâmico: acompanha o nome do repositório automaticamente.
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
 
       - name: Disable Jekyll (serve a pasta _next)
         run: touch out/.nojekyll
